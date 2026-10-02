@@ -311,6 +311,11 @@ app.get("/auth/callback", async (req: Request, res: Response) => {
       );
     }
 
+    const subject = payload.sub;
+    if (typeof subject !== "string") {
+      throw new Error("ID token subject was missing or invalid.");
+    }
+
     writeCredentials({
       email:
         typeof payload.email === "string" ? payload.email : null,
@@ -319,7 +324,7 @@ app.get("/auth/callback", async (req: Request, res: Response) => {
       picture:
         typeof payload.picture === "string" ? payload.picture : null,
       issuer: ISSUER,
-      subject: payload.sub,
+      subject,
       client_id: issuedClientId,
       ext_agent_host_id: getHostId(),
       id_token: token.id_token,
