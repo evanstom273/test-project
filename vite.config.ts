@@ -2,7 +2,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === "build" ? "/test-project/" : "/",
   plugins: [react(), tailwindcss()],
   server: {
     host: "127.0.0.1",
@@ -13,4 +14,4 @@ export default defineConfig({
       "/auth": "http://127.0.0.1:1456",
     },
   },
-});
+}));
