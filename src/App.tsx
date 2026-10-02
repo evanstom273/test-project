@@ -51,6 +51,14 @@ export default function App() {
   );
 
   async function initialise() {
+    if (isGitHubPages) {
+      setSession({ signedIn: false });
+      setStatus(
+        "GitHub Pages is a static UI preview. Run the app locally to use ChatGPT sign-in.",
+      );
+      return;
+    }
+
     try {
       const nextSession = await fetchJson<Session>("/api/session");
       setSession(nextSession);
