@@ -4,10 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "concurrently -k -n api,web \"tsx watch server/index.ts\" \"vite\"",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "api": "tsx server/index.ts"
   },
   "dependencies": {
     "express": "^5.1.0",
-    "jose": "^6.1.0"
+    "jose": "^6.1.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.1.13",
+    "tsx": "^4.20.5",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.7"
   }
 }
