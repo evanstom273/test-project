@@ -38,6 +38,8 @@ export default function App() {
   const [output, setOutput] = useState("");
   const [status, setStatus] = useState("Checking connection…");
   const [sending, setSending] = useState(false);
+  const isGitHubPages =
+    window.location.hostname.endsWith("github.io");
 
   useEffect(() => {
     void initialise();
@@ -54,7 +56,11 @@ export default function App() {
       setSession(nextSession);
 
       if (!nextSession.signedIn) {
-        setStatus("Not connected yet.");
+        setStatus(
+          isGitHubPages
+            ? "GitHub Pages is a static UI preview. Run the app locally to use ChatGPT sign-in."
+            : "Not connected yet.",
+        );
         return;
       }
 
@@ -196,7 +202,7 @@ export default function App() {
             {session === null ? (
               <LoadingState />
             ) : !session.signedIn ? (
-              <SignedOut status={status} />
+              <SignedOut status={status} isGitHubPages={isGitHubPages} />
             ) : (
               <SignedIn
                 session={session}
@@ -228,7 +234,13 @@ function LoadingState() {
   );
 }
 
-function SignedOut({ status }: { status: string }) {
+function SignedOut({
+  status,
+  isGitHubPages,
+}: {
+  status: string;
+  isGitHubPages: boolean;
+}) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div className="rounded-2xl border border-white/10 bg-black/20 p-6 sm:p-8">
@@ -239,13 +251,21 @@ function SignedOut({ status }: { status: string }) {
           eligible ChatGPT-plan model usage.
         </p>
 
-        <a
-          href="/auth/start"
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-zinc-950 transition hover:bg-zinc-200"
-        >
-          Continue with ChatGPT
-          <ArrowRight className="h-4 w-4" />
-        </a>
+        {isGitHubPages ? (
+          <div className="mt-6 rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-100">
+            GitHub Pages can host this React UI, but not the local OAuth/API
+            server. Clone the repo and run <code className="font-mono">npm run dev</code>
+            to test Continue with ChatGPT.
+          </div>
+        ) : (
+          <a
+            href="/auth/start"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-zinc-950 transition hover:bg-zinc-200"
+          >
+            Continue with ChatGPT
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        )}
       </div>
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
